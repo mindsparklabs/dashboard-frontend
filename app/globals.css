@@ -24,3 +24,72 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes waveGrow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.ambient-bg {
+  background: radial-gradient(circle at 20% 20%, #ff2ecb22, transparent 40%),
+    radial-gradient(circle at 80% 15%, #39d0ff22, transparent 40%),
+    radial-gradient(circle at 50% 80%, #a86bff22, transparent 45%),
+    #05050a;
+}
+
+.neon-heading {
+  background: linear-gradient(
+    90deg,
+    #ff2ecb,
+    #a86bff,
+    #39d0ff,
+    #39ff88,
+    #ffd23f,
+    #ff8a3d,
+    #ff2ecb
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s linear infinite;
+}

@@ -1,69 +1,88 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { sectors } from "@/lib/sectors";
+
+const ROTATE_MS = 5500;
 
 export default function Home() {
+  const [featuredIndex, setFeaturedIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFeaturedIndex((prev) => (prev + 1) % sectors.length);
+    }, ROTATE_MS);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="ambient-bg min-h-screen w-screen px-3 py-6">
+      <h1 className="neon-heading text-center text-4xl sm:text-5xl font-black mb-8 tracking-tight">
+        Today&apos;s Top Three
+      </h1>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[22vh] gap-5 max-w-[1800px] mx-auto">
+        {sectors.map((sector, index) => {
+          const isFeatured = index === featuredIndex;
+          const pulseDuration = 2.5 + (index % 4) * 0.6;
+          const pulseDelay = index * 0.4;
+          const waveDuration = 5 + (index % 3) * 1.2;
+          const waveDelay = index * 0.6;
+          const textColor = isFeatured
+            ? sector.color
+            : `color-mix(in srgb, ${sector.color} 40%, white)`;
+
+          return (
+            <motion.div
+              key={sector.slug}
+              layout
+              transition={{ type: "spring", stiffness: 300, damping: 35, mass: 1 }}
+              className={
+                isFeatured ? "col-span-2 row-span-2" : "col-span-1 row-span-1"
+              }
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+              <Link href={`/sector/${sector.slug}`} className="block h-full w-full">
+                <div
+                  className="h-full w-full rounded-3xl cursor-pointer hover:scale-[1.03] backdrop-blur-xl transition-transform duration-300"
+                  style={
+                    isFeatured
+                      ? {
+                          border: `1.5px solid ${sector.color}`,
+                          background: `linear-gradient(160deg, ${sector.color}30, ${sector.color}0a)`,
+                          boxShadow: `0 0 35px ${sector.color}77, 0 0 80px ${sector.color}33, inset 0 1px 0 ${sector.color}44`,
+                          animation: `pulseGlow ${pulseDuration}s ease-in-out ${pulseDelay}s infinite, waveGrow ${waveDuration}s ease-in-out ${waveDelay}s infinite`,
+                        }
+                      : {
+                          border: `1px solid ${sector.color}44`,
+                          background: `linear-gradient(160deg, ${sector.color}1c, ${sector.color}08)`,
+                          boxShadow: `0 0 14px ${sector.color}33`,
+                          animation: `waveGrow ${waveDuration}s ease-in-out ${waveDelay}s infinite`,
+                        }
+                  }
+                >
+                  <div className="h-full w-full flex items-center justify-center px-6 py-6 text-center">
+                    <span
+                      className={`transition-all duration-[900ms] ease-out ${
+                        isFeatured
+                          ? "text-3xl sm:text-4xl font-black leading-tight"
+                          : "text-lg sm:text-xl font-extrabold leading-tight"
+                      }`}
+                      style={{
+                        color: textColor,
+                        textShadow: isFeatured ? `0 0 14px ${sector.color}` : "none",
+                      }}
+                    >
+                      {sector.name}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+    </main>
   );
 }
