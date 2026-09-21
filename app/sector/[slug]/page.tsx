@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const sector = getSectorBySlug(slug);
   return {
-    title: sector ? `${sector.name} — Today's Top 3` : "Sector not found",
+    title: sector ? `${sector.name} | Top 3 Today` : "Sector not found",
   };
 }
 

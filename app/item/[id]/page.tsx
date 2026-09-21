@@ -15,7 +15,7 @@ export async function generateMetadata({
   const { id } = await params;
   const item = await getItemById(id);
   return {
-    title: item ? item.headline : "Item not found",
+    title: item ? `${item.headline} | Top 3 Today` : "Item not found",
   };
 }
 
