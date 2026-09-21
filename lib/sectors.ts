@@ -15,6 +15,8 @@ export const sectors: Sector[] = [
   { slug: "finance", name: "Finance", color: "#ffd23f" },
   { slug: "ai", name: "AI", color: "#a86bff" },
   { slug: "sport", name: "Sport", color: "#ff8a3d" },
+  { slug: "home-kitchen", name: "Home & Kitchen", color: "#4dd9c9" },
+  { slug: "pets", name: "Pets", color: "#c9a876" },
 ];
 
 export function getSectorBySlug(slug: string): Sector | undefined {
