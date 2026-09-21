@@ -1,88 +1,26 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { motion } from "motion/react";
-import Link from "next/link";
 import { sectors } from "@/lib/sectors";
+import { getLatestItemsForSector } from "@/lib/daily-items";
+import { SectorGrid, type SectorWithPreview } from "@/components/sector-grid";
 
-const ROTATE_MS = 5500;
+// Preview headlines come from the same append-only `daily items` table as
+// the sector/item pages, so the homepage must stay just as fresh.
+export const revalidate = 0;
 
-export default function Home() {
-  const [featuredIndex, setFeaturedIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFeaturedIndex((prev) => (prev + 1) % sectors.length);
-    }, ROTATE_MS);
-    return () => clearInterval(interval);
-  }, []);
+export default async function Home() {
+  const sectorsWithPreviews: SectorWithPreview[] = await Promise.all(
+    sectors.map(async (sector) => {
+      const row = await getLatestItemsForSector(sector.name);
+      const topItem = row?.items.find((item) => item.rank === 1);
+      return { ...sector, preview: topItem?.headline ?? null };
+    })
+  );
 
   return (
     <main className="ambient-bg min-h-screen w-screen px-3 py-6">
       <h1 className="neon-heading text-center text-4xl sm:text-5xl font-black mb-8 tracking-tight">
         Today&apos;s Top Three
       </h1>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[22vh] gap-5 max-w-[1800px] mx-auto">
-        {sectors.map((sector, index) => {
-          const isFeatured = index === featuredIndex;
-          const pulseDuration = 2.5 + (index % 4) * 0.6;
-          const pulseDelay = index * 0.4;
-          const waveDuration = 5 + (index % 3) * 1.2;
-          const waveDelay = index * 0.6;
-          const textColor = isFeatured
-            ? sector.color
-            : `color-mix(in srgb, ${sector.color} 40%, white)`;
-
-          return (
-            <motion.div
-              key={sector.slug}
-              layout
-              transition={{ type: "spring", stiffness: 300, damping: 35, mass: 1 }}
-              className={
-                isFeatured ? "col-span-2 row-span-2" : "col-span-1 row-span-1"
-              }
-            >
-              <Link href={`/sector/${sector.slug}`} className="block h-full w-full">
-                <div
-                  className="h-full w-full rounded-3xl cursor-pointer hover:scale-[1.03] backdrop-blur-xl transition-transform duration-300"
-                  style={
-                    isFeatured
-                      ? {
-                          border: `1.5px solid ${sector.color}`,
-                          background: `linear-gradient(160deg, ${sector.color}30, ${sector.color}0a)`,
-                          boxShadow: `0 0 35px ${sector.color}77, 0 0 80px ${sector.color}33, inset 0 1px 0 ${sector.color}44`,
-                          animation: `pulseGlow ${pulseDuration}s ease-in-out ${pulseDelay}s infinite, waveGrow ${waveDuration}s ease-in-out ${waveDelay}s infinite`,
-                        }
-                      : {
-                          border: `1px solid ${sector.color}44`,
-                          background: `linear-gradient(160deg, ${sector.color}1c, ${sector.color}08)`,
-                          boxShadow: `0 0 14px ${sector.color}33`,
-                          animation: `waveGrow ${waveDuration}s ease-in-out ${waveDelay}s infinite`,
-                        }
-                  }
-                >
-                  <div className="h-full w-full flex items-center justify-center px-6 py-6 text-center">
-                    <span
-                      className={`transition-all duration-[900ms] ease-out ${
-                        isFeatured
-                          ? "text-3xl sm:text-4xl font-black leading-tight"
-                          : "text-lg sm:text-xl font-extrabold leading-tight"
-                      }`}
-                      style={{
-                        color: textColor,
-                        textShadow: isFeatured ? `0 0 14px ${sector.color}` : "none",
-                      }}
-                    >
-                      {sector.name}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          );
-        })}
-      </div>
+      <SectorGrid sectors={sectorsWithPreviews} />
     </main>
   );
 }
