@@ -83,13 +83,6 @@ export default async function ItemPage({
           >
             View on Amazon →
           </a>
-
-          <span
-            className="text-xs font-mono opacity-50"
-            style={{ color: "#f5f5f7" }}
-          >
-            search: {item.search_term}
-          </span>
         </div>
       </div>
     </main>

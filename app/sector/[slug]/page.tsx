@@ -50,7 +50,14 @@ export default async function SectorPage({
         </h1>
         {row?.created_at && (
           <p className="text-center text-sm mt-2 opacity-60">
-            Updated {new Date(row.created_at).toLocaleString()}
+            Updated{" "}
+            {new Date(row.created_at).toLocaleString("en-GB", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </p>
         )}
       </div>
@@ -88,9 +95,6 @@ export default async function SectorPage({
               <p className="text-sm sm:text-base opacity-80 leading-relaxed">
                 {item.description}
               </p>
-              <span className="mt-auto text-xs font-mono opacity-60">
-                search: {item.search_term}
-              </span>
             </Link>
           ))}
         </div>
