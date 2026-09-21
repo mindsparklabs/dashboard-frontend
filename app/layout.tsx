@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Top 3 Today | Trending Products UK",
   description:
-    "Today's top 3 trending products across beauty, tech, fitness, finance, AI, sport, home & kitchen and pets - refreshed daily, UK-focused.",
+    "Today's top 3 trending products across beauty, tech, fitness/sport, finance, AI, home & kitchen and pets - refreshed daily, UK-focused.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -31,7 +31,13 @@ export default async function ItemPage({
 
   const sector = getSectorByName(item.sector);
   const accentColor = sector?.color ?? "#39d0ff";
-  const affiliateHref = buildAffiliateLink("amazon", item.search_term);
+  // Some sectors (AI, Finance) have no Amazon-eligible products - this is
+  // a per-sector flag in lib/sectors.ts, not a hardcoded sector check here,
+  // so adding another non-Amazon sector later is a one-line config change.
+  const showAmazonLink = sector?.amazonEligible ?? true;
+  const affiliateHref = showAmazonLink
+    ? buildAffiliateLink("amazon", item.search_term)
+    : null;
 
   return (
     <main className="ambient-bg min-h-screen w-screen px-3 py-6">
@@ -70,19 +76,37 @@ export default async function ItemPage({
             {item.description}
           </p>
 
-          <a
-            href={affiliateHref}
-            target="_blank"
-            rel="noopener noreferrer nofollow sponsored"
-            className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
-            style={{
-              background: accentColor,
-              color: "#05050a",
-              boxShadow: `0 0 25px ${accentColor}88`,
-            }}
-          >
-            View on Amazon →
-          </a>
+          {affiliateHref ? (
+            <a
+              href={affiliateHref}
+              target="_blank"
+              rel="noopener noreferrer nofollow sponsored"
+              className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
+              style={{
+                background: accentColor,
+                color: "#05050a",
+                boxShadow: `0 0 25px ${accentColor}88`,
+              }}
+            >
+              View on Amazon →
+            </a>
+          ) : (
+            item.source && (
+              <a
+                href={item.source}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
+                style={{
+                  background: accentColor,
+                  color: "#05050a",
+                  boxShadow: `0 0 25px ${accentColor}88`,
+                }}
+              >
+                Read the source →
+              </a>
+            )
+          )}
         </div>
       </div>
     </main>

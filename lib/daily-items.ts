@@ -5,6 +5,11 @@ export type DailyItem = {
   headline: string;
   description: string;
   search_term: string;
+  // URL of the original trend source article. Not selected specially -
+  // it's part of the same `items` jsonb blob as everything else above -
+  // just typed here so pages can use it. Assumed field name; if the n8n
+  // pipeline actually writes a different key, this is a one-line fix.
+  source?: string;
 };
 
 export type DailyItemsRow = {
