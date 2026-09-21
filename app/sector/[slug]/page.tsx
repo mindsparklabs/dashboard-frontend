@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSectorBySlug, sectors } from "@/lib/sectors";
-import { getLatestItemsForSector } from "@/lib/daily-items";
+import { buildItemId, getLatestItemsForSector } from "@/lib/daily-items";
 
 // `daily items` is append-only and a new row can land at any time, so this
 // page must never serve a cached snapshot.
@@ -63,9 +63,10 @@ export default async function SectorPage({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-[1400px] mx-auto">
           {items.map((item) => (
-            <div
+            <Link
               key={item.rank}
-              className="rounded-3xl backdrop-blur-xl p-6 flex flex-col gap-3 min-h-[260px]"
+              href={row ? `/item/${buildItemId(row.id, item.rank)}` : "#"}
+              className="rounded-3xl backdrop-blur-xl p-6 flex flex-col gap-3 min-h-[260px] transition-transform hover:scale-[1.02]"
               style={{
                 border: `1.5px solid ${sector.color}`,
                 background: `linear-gradient(160deg, ${sector.color}30, ${sector.color}0a)`,
@@ -90,7 +91,7 @@ export default async function SectorPage({
               <span className="mt-auto text-xs font-mono opacity-60">
                 search: {item.search_term}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       )}

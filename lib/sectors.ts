@@ -20,3 +20,10 @@ export const sectors: Sector[] = [
 export function getSectorBySlug(slug: string): Sector | undefined {
   return sectors.find((sector) => sector.slug === slug);
 }
+
+// Reverse lookup: the Supabase `sector` column stores the display name, so
+// pages that only have that (e.g. an item fetched by id) use this to theme
+// themselves and link back to the right /sector/[slug].
+export function getSectorByName(name: string): Sector | undefined {
+  return sectors.find((sector) => sector.name === name);
+}
