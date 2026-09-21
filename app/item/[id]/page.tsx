@@ -63,7 +63,10 @@ export default async function ItemPage({
             {item.headline}
           </h1>
 
-          <p className="text-base sm:text-lg opacity-80 leading-relaxed">
+          <p
+            className="text-base sm:text-lg opacity-80 leading-relaxed"
+            style={{ color: "#f5f5f7" }}
+          >
             {item.description}
           </p>
 
@@ -81,7 +84,10 @@ export default async function ItemPage({
             View on Amazon →
           </a>
 
-          <span className="text-xs font-mono opacity-50">
+          <span
+            className="text-xs font-mono opacity-50"
+            style={{ color: "#f5f5f7" }}
+          >
             search: {item.search_term}
           </span>
         </div>
