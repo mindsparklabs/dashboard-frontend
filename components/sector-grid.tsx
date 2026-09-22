@@ -7,7 +7,7 @@ import type { Sector } from "@/lib/sectors";
 
 export type SectorWithPreview = Sector & { preview: string | null };
 
-const ROTATE_MS = 5500;
+const ROTATE_MS = 3000;
 
 export function SectorGrid({ sectors }: { sectors: SectorWithPreview[] }) {
   const [featuredIndex, setFeaturedIndex] = useState(0);
@@ -35,7 +35,7 @@ export function SectorGrid({ sectors }: { sectors: SectorWithPreview[] }) {
           <motion.div
             key={sector.slug}
             layout
-            transition={{ type: "spring", stiffness: 300, damping: 35, mass: 1 }}
+            transition={{ duration: 0.5, ease: [0.65, 0, 0.35, 1] }}
             className={
               isFeatured ? "col-span-2 row-span-2" : "col-span-1 row-span-1"
             }
