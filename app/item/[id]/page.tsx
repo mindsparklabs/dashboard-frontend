@@ -38,6 +38,16 @@ export default async function ItemPage({
   const affiliateHref = showAmazonLink
     ? buildAffiliateLink("amazon", item.search_term)
     : null;
+  // Non-Amazon-eligible sectors should link back to the original article via
+  // item.source, but the n8n pipeline doesn't populate that field for every
+  // sector yet (e.g. Finance items currently have no source URL at all). Fall
+  // back to a generic search on the headline so the page never ends up with
+  // no call-to-action while that data gap gets filled in on the n8n side.
+  const sourceHref = !showAmazonLink ? item.source ?? null : null;
+  const searchFallbackHref =
+    !showAmazonLink && !sourceHref
+      ? `https://www.google.com/search?q=${encodeURIComponent(item.headline)}`
+      : null;
 
   return (
     <main className="ambient-bg min-h-screen w-screen px-3 py-6">
@@ -90,10 +100,24 @@ export default async function ItemPage({
             >
               View on Amazon →
             </a>
+          ) : sourceHref ? (
+            <a
+              href={sourceHref}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
+              style={{
+                background: accentColor,
+                color: "#05050a",
+                boxShadow: `0 0 25px ${accentColor}88`,
+              }}
+            >
+              Read the source →
+            </a>
           ) : (
-            item.source && (
+            searchFallbackHref && (
               <a
-                href={item.source}
+                href={searchFallbackHref}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
@@ -103,7 +127,7 @@ export default async function ItemPage({
                   boxShadow: `0 0 25px ${accentColor}88`,
                 }}
               >
-                Read the source →
+                Search for more →
               </a>
             )
           )}
