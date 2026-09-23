@@ -51,12 +51,10 @@ export default async function SectorPage({
         {row?.created_at && (
           <p className="text-center text-sm mt-2 opacity-60">
             Updated{" "}
-            {new Date(row.created_at).toLocaleString("en-GB", {
+            {new Date(row.created_at).toLocaleDateString("en-GB", {
               day: "numeric",
               month: "short",
               year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
             })}
           </p>
         )}
