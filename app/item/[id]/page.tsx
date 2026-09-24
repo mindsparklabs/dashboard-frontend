@@ -90,8 +90,8 @@ export default async function ItemPage({
           </p>
 
           {affiliateHref ? (
-            
-           <a href={affiliateHref}
+            <a
+              href={affiliateHref}
               target="_blank"
               rel="noopener noreferrer nofollow sponsored"
               className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
@@ -104,7 +104,7 @@ export default async function ItemPage({
               View on Amazon →
             </a>
           ) : sourceHref ? (
-            
+            <a
               href={sourceHref}
               target="_blank"
               rel="noopener noreferrer nofollow"
@@ -119,7 +119,7 @@ export default async function ItemPage({
             </a>
           ) : (
             searchFallbackHref && (
-              
+              <a
                 href={searchFallbackHref}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
