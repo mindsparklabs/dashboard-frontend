@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getItemById } from "@/lib/daily-items";
 import { getSectorByName } from "@/lib/sectors";
@@ -29,6 +30,8 @@ export default async function ItemPage({
     notFound();
   }
 
+  const headersList = await headers();
+  const countryCode = headersList.get("x-vercel-ip-country");
   const sector = getSectorByName(item.sector);
   const accentColor = sector?.color ?? "#39d0ff";
   // Some sectors (AI, Finance) have no Amazon-eligible products - this is
@@ -36,7 +39,7 @@ export default async function ItemPage({
   // so adding another non-Amazon sector later is a one-line config change.
   const showAmazonLink = sector?.amazonEligible ?? true;
   const affiliateHref = showAmazonLink
-    ? buildAffiliateLink("amazon", item.search_term)
+    ? buildAffiliateLink("amazon", item.search_term, countryCode)
     : null;
   // Non-Amazon-eligible sectors should link back to the original article via
   // item.source, but the n8n pipeline doesn't populate that field for every
@@ -87,7 +90,7 @@ export default async function ItemPage({
           </p>
 
           {affiliateHref ? (
-            <a
+            
               href={affiliateHref}
               target="_blank"
               rel="noopener noreferrer nofollow sponsored"
@@ -101,7 +104,7 @@ export default async function ItemPage({
               View on Amazon →
             </a>
           ) : sourceHref ? (
-            <a
+            
               href={sourceHref}
               target="_blank"
               rel="noopener noreferrer nofollow"
@@ -116,7 +119,7 @@ export default async function ItemPage({
             </a>
           ) : (
             searchFallbackHref && (
-              <a
+              
                 href={searchFallbackHref}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
