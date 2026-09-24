@@ -91,7 +91,7 @@ export default async function ItemPage({
 
           {affiliateHref ? (
             
-              href={affiliateHref}
+           <a href={affiliateHref}
               target="_blank"
               rel="noopener noreferrer nofollow sponsored"
               className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"
