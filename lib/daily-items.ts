@@ -10,6 +10,14 @@ export type DailyItem = {
   // just typed here so pages can use it. Assumed field name; if the n8n
   // pipeline actually writes a different key, this is a one-line fix.
   source?: string;
+  // One-line "why it matters" hook written by the curation step. Optional:
+  // older rows (and any run where the model skips it) simply won't have it,
+  // and the UI hides the line rather than showing an empty box.
+  why_it_matters?: string | null;
+  // Product image URL. Only populated once Amazon image access is available
+  // (PA-API / Creators API); until then the UI shows a sector-coloured
+  // monogram placeholder instead.
+  image_url?: string | null;
 };
 
 export type DailyItemsRow = {
