@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AMAZON_DISCLOSURE, SITE_NAME } from "@/lib/site";
+import { FOOTER_DISCLOSURE, SITE_NAME } from "@/lib/site";
+import { CookieSettingsLink } from "@/components/cookie-consent";
 
 // NOTE: the daily video recorder finds home-page tiles with a loose,
 // case-insensitive link-name match on the sector name (e.g. "AI"). Keep
@@ -15,7 +16,7 @@ export function SiteFooter() {
         color: "#a1a1aa",
       }}
     >
-      <p className="max-w-[900px] mx-auto">{AMAZON_DISCLOSURE}</p>
+      <p className="max-w-[900px] mx-auto">{FOOTER_DISCLOSURE}</p>
       <nav className="mt-3 flex items-center justify-center gap-5 font-semibold">
         <Link href="/about" className="hover:text-white transition-colors">
           About
@@ -23,6 +24,7 @@ export function SiteFooter() {
         <Link href="/privacy" className="hover:text-white transition-colors">
           Privacy
         </Link>
+        <CookieSettingsLink />
       </nav>
       <p className="mt-3 opacity-60">
         © {new Date().getFullYear()} {SITE_NAME}

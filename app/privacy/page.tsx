@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 // Keep this page in step with reality: update it when the newsletter (or
 // anything else that collects personal data) goes live.
-const LAST_UPDATED = "27 September 2026";
+const LAST_UPDATED = "28 September 2026";
 
 export default function PrivacyPage() {
   return (
@@ -48,19 +48,43 @@ export default function PrivacyPage() {
 
       <h2>Cookies and affiliate links</h2>
       <p>
-        This site doesn&apos;t set its own tracking or advertising cookies.
-        Some links go to Amazon through the Amazon Associates programme. When
-        you click one, Amazon may set cookies on its own site to record that
-        you came from us, so we can earn a commission if you buy something.
-        That is covered by{" "}
-        <a
-          href="https://www.amazon.co.uk/gp/help/customer/display.html?nodeId=201909010"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Amazon&apos;s Privacy Notice
-        </a>
-        .
+        Some links on this site are affiliate links: if you buy something
+        after clicking one, we may earn a small commission at no extra cost to
+        you.
+      </p>
+      <ul>
+        <li>
+          <strong>Amazon.</strong> Links to Amazon go through the Amazon
+          Associates programme. Amazon may set cookies on its own site to
+          record that you came from us. See{" "}
+          <a
+            href="https://www.amazon.co.uk/gp/help/customer/display.html?nodeId=201909010"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Amazon&apos;s Privacy Notice
+          </a>
+          .
+        </li>
+        <li>
+          <strong>Other retailers (Skimlinks).</strong> Only if you click
+          &quot;Accept&quot; on our cookie notice, we load Skimlinks, which uses
+          cookies to track clicks on links to other shops so we can be paid a
+          commission. If you click &quot;Decline&quot;, it isn&apos;t loaded.
+          See{" "}
+          <a
+            href="https://skimlinks.com/privacy-policies/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Skimlinks&apos; privacy policy
+          </a>
+          .
+        </li>
+      </ul>
+      <p>
+        You can change your choice at any time using the &quot;Cookies&quot;
+        link at the bottom of every page.
       </p>
       <p>
         Other outbound links (for example to news sources) take you to
