@@ -19,7 +19,10 @@ export type ItemCta = {
  *    so a card never ends up without a button.
  */
 export function getItemCta(
-  item: Pick<DailyItem, "headline" | "search_term" | "source">,
+  item: Pick<
+    DailyItem,
+    "headline" | "search_term" | "source" | "amazon_asin_uk" | "amazon_asin_us"
+  >,
   sector: Sector | undefined,
   countryCode: string | null
 ): ItemCta {
@@ -27,7 +30,7 @@ export function getItemCta(
 
   if (amazonEligible && item.search_term) {
     return {
-      href: buildAffiliateLink("amazon", item.search_term, countryCode),
+      href: buildAffiliateLink("amazon", item.search_term, countryCode, item),
       label: "View on Amazon",
       rel: "noopener noreferrer nofollow sponsored",
       isAffiliate: true,

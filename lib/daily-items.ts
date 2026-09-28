@@ -18,6 +18,10 @@ export type DailyItem = {
   // (PA-API / Creators API); until then the UI shows a sector-coloured
   // monogram placeholder instead.
   image_url?: string | null;
+  // Exact Amazon product IDs found by the n8n pipeline (UK / US stores).
+  // When present, the buy button links straight to the product page.
+  amazon_asin_uk?: string | null;
+  amazon_asin_us?: string | null;
 };
 
 export type DailyItemsRow = {
