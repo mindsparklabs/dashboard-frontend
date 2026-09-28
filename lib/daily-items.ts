@@ -14,6 +14,9 @@ export type DailyItem = {
   // older rows (and any run where the model skips it) simply won't have it,
   // and the UI hides the line rather than showing an empty box.
   why_it_matters?: string | null;
+  // Short real figure showing the scale of the trend ("413k sold on TikTok
+  // Shop UK"). Only stored when its numbers appear in the scan sources.
+  trend_stat?: string | null;
   // Product image URL. Only populated once Amazon image access is available
   // (PA-API / Creators API); until then the UI shows a sector-coloured
   // monogram placeholder instead.

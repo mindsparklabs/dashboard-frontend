@@ -7,6 +7,7 @@ import { getSectorByName } from "@/lib/sectors";
 import { getItemCta } from "@/lib/item-cta";
 import { AMAZON_DISCLOSURE } from "@/lib/site";
 import { ItemThumbnail } from "@/components/item-thumbnail";
+import { TrendStat } from "@/components/trend-stat";
 
 // Items live inside an append-only `daily items` row that can be superseded
 // at any time, so never serve a cached snapshot of this page either.
@@ -78,6 +79,8 @@ export default async function ItemPage({
           <h1 className="neon-heading text-3xl sm:text-4xl font-black leading-tight">
             {item.headline}
           </h1>
+
+          <TrendStat stat={item.trend_stat} color={accentColor} />
 
           <p
             className="text-base sm:text-lg opacity-80 leading-relaxed"

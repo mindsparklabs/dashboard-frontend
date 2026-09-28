@@ -8,6 +8,7 @@ import { getItemCta } from "@/lib/item-cta";
 import { AMAZON_DISCLOSURE } from "@/lib/site";
 import { ItemThumbnail } from "@/components/item-thumbnail";
 import { ShareButton } from "@/components/share-button";
+import { TrendStat } from "@/components/trend-stat";
 
 // `daily items` is append-only and a new row can land at any time, so this
 // page must never serve a cached snapshot.
@@ -122,6 +123,8 @@ export default async function SectorPage({
                       </h2>
                     </div>
                   </div>
+
+                  <TrendStat stat={item.trend_stat} color={color} />
 
                   <p className="text-sm sm:text-base opacity-80 leading-relaxed">
                     {item.description}
