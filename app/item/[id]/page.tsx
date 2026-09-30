@@ -109,7 +109,7 @@ export default async function ItemPage({
           )}
 
           <a
-            href={cta.href}
+            href={`/go/${item.id}?from=item`}
             target="_blank"
             rel={cta.rel}
             className="inline-flex items-center justify-center rounded-full font-extrabold text-base sm:text-lg px-8 py-3 mt-2 self-start transition-transform hover:scale-[1.03]"

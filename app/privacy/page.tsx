@@ -40,6 +40,12 @@ export default function PrivacyPage() {
           don&apos;t store this against you.
         </li>
         <li>
+          <strong>Anonymous click counts.</strong> When you tap a buy or read
+          button we count which item was clicked and the country it came
+          from, so we know which picks are useful. Nothing that identifies
+          you (such as your IP address) is stored with it.
+        </li>
+        <li>
           <strong>Server logs.</strong> Like any website, our hosting
           provider (Vercel) keeps short-lived technical logs, including IP
           addresses, to keep the site secure and running.
