@@ -120,15 +120,45 @@ export type WeeklyResult = {
   lastUpdated: string | null;
 };
 
-function mergeKey(item: DailyItem): string {
-  return (item.search_term || item.headline || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
+// Words that say nothing about which product it is.
+const STOP_WORDS = new Set([
+  "a", "an", "and", "the", "for", "with", "of", "in", "on", "to", "by",
+  "uk", "us", "tiktok", "amazon", "viral", "trending", "best", "new",
+  "set", "pack", "kit", "pcs",
+]);
+
+function productTokens(item: DailyItem): Set<string> {
+  return new Set(
+    (item.search_term || item.headline || "")
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((word) => word && !STOP_WORDS.has(word))
+  );
 }
 
 /**
- * One sector's week: the latest run of each UK day, merged by search term,
+ * The pipeline words the same product differently on different days
+ * ("magic slushy cup" / "magic freeze slushy cup"), so exact matching would
+ * list it twice. Treat two picks as the same when they share at least two
+ * product words and those cover most of the shorter name - or when the
+ * names are identical.
+ */
+function isSameProduct(a: Set<string>, b: Set<string>): boolean {
+  if (a.size === 0 || b.size === 0) return false;
+  let shared = 0;
+  for (const word of a) if (b.has(word)) shared++;
+  if (shared === a.size && shared === b.size) return true;
+  return shared >= 2 && shared / Math.min(a.size, b.size) >= 0.6;
+}
+
+type Cluster = {
+  tokens: Set<string>[];
+  days: Set<string>;
+  latest: WeeklyItem;
+};
+
+/**
+ * One sector's week: the latest run of each UK day, repeats merged by product,
  * ranked by days in the top 3, then best rank, then most recent.
  */
 export const getWeeklyItems = cache(
@@ -158,25 +188,36 @@ export const getWeeklyItems = cache(
       byDay.set(ukDateKey(row.created_at), row);
     }
 
-    const merged = new Map<string, WeeklyItem>();
-    for (const row of byDay.values()) {
+    const clusters: Cluster[] = [];
+    for (const [day, row] of byDay) {
       for (const item of row.items ?? []) {
-        const key = mergeKey(item);
-        if (!key) continue;
-        const previous = merged.get(key);
-        merged.set(key, {
-          // Newest copy wins for the text, so the page shows the freshest
-          // description and stat for a repeat pick.
+        const tokens = productTokens(item);
+        if (tokens.size === 0) continue;
+        const cluster = clusters.find((c) =>
+          c.tokens.some((other) => isSameProduct(tokens, other))
+        );
+        const bestRank = Math.min(cluster?.latest.bestRank ?? item.rank, item.rank);
+        // Newest copy wins for the text, so a repeat pick shows its
+        // freshest description and stat.
+        const latest: WeeklyItem = {
           ...item,
           id: buildItemId(row.id, item.rank),
-          daysInTop3: (previous?.daysInTop3 ?? 0) + 1,
-          bestRank: Math.min(previous?.bestRank ?? item.rank, item.rank),
+          daysInTop3: 0,
+          bestRank,
           lastSeen: row.created_at,
-        });
+        };
+        if (cluster) {
+          cluster.tokens.push(tokens);
+          cluster.days.add(day);
+          cluster.latest = latest;
+        } else {
+          clusters.push({ tokens: [tokens], days: new Set([day]), latest });
+        }
       }
     }
+    const merged = clusters.map((c) => ({ ...c.latest, daysInTop3: c.days.size }));
 
-    const items = [...merged.values()]
+    const items = merged
       .sort(
         (a, b) =>
           b.daysInTop3 - a.daysInTop3 ||
