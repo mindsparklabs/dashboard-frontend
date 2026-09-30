@@ -2,6 +2,10 @@
 
 export const SITE_NAME = "Top 3 Today";
 
+// Canonical origin (the live site redirects to www). Used for canonical
+// URLs, social previews, structured data and the sitemap.
+export const SITE_URL = "https://www.top3today.com";
+
 // Required wording for Amazon Associates - keep verbatim.
 export const AMAZON_DISCLOSURE =
   "As an Amazon Associate I earn from qualifying purchases.";

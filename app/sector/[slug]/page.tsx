@@ -8,6 +8,7 @@ import { getItemCta } from "@/lib/item-cta";
 import { AMAZON_DISCLOSURE } from "@/lib/site";
 import { ItemThumbnail } from "@/components/item-thumbnail";
 import { ShareButton } from "@/components/share-button";
+import { weekOf, weekSlug } from "@/lib/weekly";
 import { TrendStat } from "@/components/trend-stat";
 
 // `daily items` is append-only and a new row can land at any time, so this
@@ -66,6 +67,19 @@ export default async function SectorPage({
               month: "short",
               year: "numeric",
             })}
+          </p>
+        )}
+        {/* Link text must not contain a sector name - the video recorder
+            matches links loosely by sector name. Sits outside `article`. */}
+        {row?.created_at && (
+          <p className="text-center mt-3">
+            <Link
+              href={`/best/${sector.slug}/${weekSlug(weekOf(row.created_at))}`}
+              className="inline-block rounded-full px-4 py-1.5 text-sm font-bold transition-opacity opacity-80 hover:opacity-100"
+              style={{ color: sector.color, border: `1px solid ${sector.color}77` }}
+            >
+              This week&apos;s best →
+            </Link>
           </p>
         )}
       </div>
