@@ -1,6 +1,8 @@
 import { sectors } from "@/lib/sectors";
 import { getLatestItemsForSector } from "@/lib/daily-items";
+import Link from "next/link";
 import { SectorList, type SectorWithPreview } from "@/components/sector-list";
+import { showBlackFridayBanner } from "@/lib/seasonal";
 
 // Preview headlines come from the same append-only `daily items` table as
 // the sector/item pages, so the homepage must stay just as fresh.
@@ -39,6 +41,21 @@ export default async function Home() {
           {today}
         </p>
       </header>
+      {/* Seasonal banner. Keep its text free of sector names - see the
+          recorder note in components/site-footer.tsx. */}
+      {showBlackFridayBanner() && (
+        <Link
+          href="/black-friday"
+          className="block max-w-[980px] mx-auto mb-4 sm:mb-6 rounded-2xl px-4 py-3 text-center font-extrabold text-sm sm:text-base transition-transform hover:scale-[1.01]"
+          style={{
+            border: "1px solid #ff2ecb",
+            background: "linear-gradient(90deg, #ff2ecb33, #a86bff22, #39d0ff33)",
+            boxShadow: "0 0 24px #ff2ecb55",
+          }}
+        >
+          🖤 Black Friday 2026: the most-wanted products →
+        </Link>
+      )}
       <SectorList sectors={sectorsWithPreviews} />
     </main>
   );

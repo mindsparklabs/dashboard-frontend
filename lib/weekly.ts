@@ -158,6 +158,51 @@ type Cluster = {
 };
 
 /**
+ * Merges repeat picks across days (see isSameProduct) and ranks them by days
+ * in the top 3, then best rank, then most recent. `byDay` holds one row per
+ * UK day - the latest run of that day.
+ */
+function rankPicks(byDay: Map<string, DailyItemsRow>, limit: number): WeeklyItem[] {
+  const clusters: Cluster[] = [];
+  for (const [day, row] of byDay) {
+    for (const item of row.items ?? []) {
+      const tokens = productTokens(item);
+      if (tokens.size === 0) continue;
+      const cluster = clusters.find((c) =>
+        c.tokens.some((other) => isSameProduct(tokens, other))
+      );
+      const bestRank = Math.min(cluster?.latest.bestRank ?? item.rank, item.rank);
+      // Newest copy wins for the text, so a repeat pick shows its
+      // freshest description and stat.
+      const latest: WeeklyItem = {
+        ...item,
+        id: buildItemId(row.id, item.rank),
+        daysInTop3: 0,
+        bestRank,
+        lastSeen: row.created_at,
+      };
+      if (cluster) {
+        cluster.tokens.push(tokens);
+        cluster.days.add(day);
+        cluster.latest = latest;
+      } else {
+        clusters.push({ tokens: [tokens], days: new Set([day]), latest });
+      }
+    }
+  }
+  const merged = clusters.map((c) => ({ ...c.latest, daysInTop3: c.days.size }));
+
+  return merged
+    .sort(
+      (a, b) =>
+        b.daysInTop3 - a.daysInTop3 ||
+        a.bestRank - b.bestRank ||
+        b.lastSeen.localeCompare(a.lastSeen)
+    )
+    .slice(0, limit);
+}
+
+/**
  * One sector's week: the latest run of each UK day, repeats merged by product,
  * ranked by days in the top 3, then best rank, then most recent.
  */
@@ -188,43 +233,7 @@ export const getWeeklyItems = cache(
       byDay.set(ukDateKey(row.created_at), row);
     }
 
-    const clusters: Cluster[] = [];
-    for (const [day, row] of byDay) {
-      for (const item of row.items ?? []) {
-        const tokens = productTokens(item);
-        if (tokens.size === 0) continue;
-        const cluster = clusters.find((c) =>
-          c.tokens.some((other) => isSameProduct(tokens, other))
-        );
-        const bestRank = Math.min(cluster?.latest.bestRank ?? item.rank, item.rank);
-        // Newest copy wins for the text, so a repeat pick shows its
-        // freshest description and stat.
-        const latest: WeeklyItem = {
-          ...item,
-          id: buildItemId(row.id, item.rank),
-          daysInTop3: 0,
-          bestRank,
-          lastSeen: row.created_at,
-        };
-        if (cluster) {
-          cluster.tokens.push(tokens);
-          cluster.days.add(day);
-          cluster.latest = latest;
-        } else {
-          clusters.push({ tokens: [tokens], days: new Set([day]), latest });
-        }
-      }
-    }
-    const merged = clusters.map((c) => ({ ...c.latest, daysInTop3: c.days.size }));
-
-    const items = merged
-      .sort(
-        (a, b) =>
-          b.daysInTop3 - a.daysInTop3 ||
-          a.bestRank - b.bestRank ||
-          b.lastSeen.localeCompare(a.lastSeen)
-      )
-      .slice(0, WEEKLY_ITEM_LIMIT);
+    const items = rankPicks(byDay, WEEKLY_ITEM_LIMIT);
 
     const rows = [...byDay.values()];
     return {
@@ -283,5 +292,38 @@ export const getWeekIndex = cache(
     }
 
     return [...latest.values()].sort((a, b) => compareWeeks(b.week, a.week));
+  }
+);
+
+/**
+ * A sector's most persistent picks over the last `days` UK days (today
+ * included) - the same merge + ranking as the weekly pages, over a rolling
+ * window. Used by seasonal hubs such as /black-friday.
+ */
+export const getRecentTopItems = cache(
+  async (sectorName: string, days: number, limit: number): Promise<WeeklyItem[]> => {
+    const todayKey = ukDateKey(new Date());
+    const firstKey = addDays(todayKey, -(days - 1));
+
+    const { data, error } = await supabase
+      .from("daily items")
+      .select("id, sector, items, created_at")
+      .eq("sector", sectorName)
+      .gte("created_at", dateKeyToUtc(addDays(firstKey, -1)).toISOString())
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      throw new Error(
+        `Failed to fetch recent "daily items" for "${sectorName}": ${error.message}`
+      );
+    }
+
+    const byDay = new Map<string, DailyItemsRow>();
+    for (const row of (data ?? []) as DailyItemsRow[]) {
+      const day = ukDateKey(row.created_at);
+      if (day < firstKey) continue;
+      byDay.set(day, row);
+    }
+    return rankPicks(byDay, limit);
   }
 );
