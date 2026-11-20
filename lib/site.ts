@@ -31,10 +31,12 @@ export const CLICK_LOG_URL =
   "https://mindsparklabs.app.n8n.cloud/webhook/t3t-click";
 export const CLICK_LOG_KEY = "03f29ae8da82a243df2482b3";
 
-// Official social profiles. Used for the footer "Follow us" links and the
-// Organization structured data (sameAs). Add Reddit here once the profile has
-// some history.
+// Official social profiles. Used for the footer "Follow us" buttons and the
+// Organization structured data (sameAs). Labels must not contain a sector
+// name (see the recorder note in components/site-footer.tsx).
 export const SOCIAL_LINKS = [
-  { label: "Bluesky", href: "https://bsky.app/profile/top3today.com" },
-  { label: "X", href: "https://x.com/Top3TodayHQ" },
+  { label: "Pinterest", href: "https://www.pinterest.com/top3todayhq/", color: "#ff5c8a" },
+  { label: "Bluesky", href: "https://bsky.app/profile/top3today.com", color: "#39d0ff" },
+  { label: "X", href: "https://x.com/Top3TodayHQ", color: "#ededed" },
+  { label: "Reddit", href: "https://www.reddit.com/user/Top3Today/", color: "#ff8a3d" },
 ] as const;

@@ -16,6 +16,33 @@ export function SiteFooter() {
         color: "#a1a1aa",
       }}
     >
+      <div className="mb-6">
+        <p
+          className="text-sm sm:text-base font-extrabold uppercase tracking-widest"
+          style={{ color: "#ededed" }}
+        >
+          Follow us for daily top 3s
+        </p>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+          {SOCIAL_LINKS.map((s) => (
+            <a
+              key={s.href}
+              href={s.href}
+              target="_blank"
+              rel="me noopener noreferrer"
+              className="rounded-full px-5 py-2 text-sm sm:text-base font-bold transition-transform hover:scale-105"
+              style={{
+                color: s.color,
+                border: `1.5px solid ${s.color}`,
+                boxShadow: `0 0 12px ${s.color}55`,
+                background: "#ffffff08",
+              }}
+            >
+              {s.label}
+            </a>
+          ))}
+        </div>
+      </div>
       <p className="max-w-[900px] mx-auto">{FOOTER_DISCLOSURE}</p>
       <nav className="mt-3 flex items-center justify-center gap-5 font-semibold">
         <Link href="/best" className="hover:text-white transition-colors">
@@ -29,20 +56,6 @@ export function SiteFooter() {
         </Link>
         <CookieSettingsLink />
       </nav>
-      <p className="mt-3 flex items-center justify-center gap-4">
-        <span className="opacity-60">Follow us</span>
-        {SOCIAL_LINKS.map((s) => (
-          <a
-            key={s.href}
-            href={s.href}
-            target="_blank"
-            rel="me noopener noreferrer"
-            className="font-semibold hover:text-white transition-colors"
-          >
-            {s.label}
-          </a>
-        ))}
-      </p>
       <p className="mt-3 opacity-60">
         © {new Date().getFullYear()} {SITE_NAME}
       </p>
