@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FOOTER_DISCLOSURE, SITE_NAME } from "@/lib/site";
+import { FOOTER_DISCLOSURE, SITE_NAME, SOCIAL_LINKS } from "@/lib/site";
 import { CookieSettingsLink } from "@/components/cookie-consent";
 
 // NOTE: the daily video recorder finds home-page tiles with a loose,
@@ -29,6 +29,20 @@ export function SiteFooter() {
         </Link>
         <CookieSettingsLink />
       </nav>
+      <p className="mt-3 flex items-center justify-center gap-4">
+        <span className="opacity-60">Follow us</span>
+        {SOCIAL_LINKS.map((s) => (
+          <a
+            key={s.href}
+            href={s.href}
+            target="_blank"
+            rel="me noopener noreferrer"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            {s.label}
+          </a>
+        ))}
+      </p>
       <p className="mt-3 opacity-60">
         © {new Date().getFullYear()} {SITE_NAME}
       </p>

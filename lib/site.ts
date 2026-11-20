@@ -19,10 +19,9 @@ export const FOOTER_DISCLOSURE =
 export const SKIMLINKS_SRC =
   "https://s.skimresources.com/js/310062X1798444.skimlinks.js";
 
-// Contact address shown on the Privacy and About pages. Leave empty to hide
-// the contact line until a business inbox exists; set it to e.g.
-// "hello@top3today.com" once that mailbox is live.
-export const CONTACT_EMAIL = "";
+// Contact address shown on the Privacy and About pages (Cloudflare Email
+// Routing forwards it to the business Gmail). Set to "" to hide it.
+export const CONTACT_EMAIL = "hello@top3today.com";
 
 // Outbound click logging (see app/go/[id]/route.ts). Clicks are posted to an
 // n8n webhook that stores them for the Monday stats email. The key only stops
@@ -31,3 +30,11 @@ export const CONTACT_EMAIL = "";
 export const CLICK_LOG_URL =
   "https://mindsparklabs.app.n8n.cloud/webhook/t3t-click";
 export const CLICK_LOG_KEY = "03f29ae8da82a243df2482b3";
+
+// Official social profiles. Used for the footer "Follow us" links and the
+// Organization structured data (sameAs). Add Reddit here once the profile has
+// some history.
+export const SOCIAL_LINKS = [
+  { label: "Bluesky", href: "https://bsky.app/profile/top3today.com" },
+  { label: "X", href: "https://x.com/Top3TodayHQ" },
+] as const;
