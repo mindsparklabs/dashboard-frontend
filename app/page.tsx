@@ -14,7 +14,7 @@ export const revalidate = 300;
 
 const TITLE = "Top 3 Today | Today's Trending Products, Picked Daily";
 const DESCRIPTION =
-  "The 3 products trending hardest right now in beauty, tech, home & kitchen, fitness, pets, AI, finance and viral finds. Fresh picks every morning for US & UK shoppers.";
+  "The 3 products trending hardest right now in beauty, tech, home & kitchen, fitness, pets, AI, finance and viral finds. Fresh picks every morning.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -36,11 +36,11 @@ const FAQ = [
   },
   {
     q: "How often is it updated?",
-    a: "Every day. New picks land each morning (UK time), and previous days stay available on each category page so you can see how trends move.",
+    a: "Every day. New picks land every morning, and previous days stay available on each category page so you can see how trends move.",
   },
   {
-    q: "Is it for the US or the UK?",
-    a: "Both. Picks are chosen for shoppers in the US and UK, and shopping links take you to the right Amazon store for where you are.",
+    q: "Where can I use it?",
+    a: "Anywhere. Picks are chosen from what's trending worldwide, and shopping links take you to the right Amazon store for where you are.",
   },
   {
     q: "How does the site make money?",

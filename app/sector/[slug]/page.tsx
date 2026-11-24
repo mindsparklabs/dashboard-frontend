@@ -45,7 +45,7 @@ export async function generateMetadata({
   const title = `Top 3 ${seo.keyword} Today${date ? ` (${date})` : ""}`;
   const description = metaDescription(
     items.length
-      ? `Today's top 3 ${seo.noun}: ${items.map((i) => i.headline).join(", ")}. Updated every morning for US & UK shoppers.`
+      ? `Today's top 3 ${seo.noun}: ${items.map((i) => i.headline).join(", ")}. Updated every morning.`
       : seo.intro
   );
   const path = `/sector/${sector.slug}`;

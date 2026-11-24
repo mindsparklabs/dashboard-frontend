@@ -38,7 +38,7 @@ export function SectorAbout({
         </h2>
         <p className="leading-relaxed">{seo.intro}</p>
         <p className="leading-relaxed mt-2 opacity-80">
-          Picks are refreshed every morning for shoppers in the US and UK. Ranks
+          Picks are refreshed every morning from what's trending worldwide. Ranks
           reflect how strongly each trend is moving today, not paid placement.
         </p>
       </div>

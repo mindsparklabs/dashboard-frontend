@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   title: "Top 3 Today | Today's Trending Products, Picked Daily",
   description:
-    "The 3 products trending hardest right now in beauty, tech, home & kitchen, fitness, pets, AI, finance and viral finds. Fresh picks every morning for US & UK shoppers.",
+    "The 3 products trending hardest right now in beauty, tech, home & kitchen, fitness, pets, AI, finance and viral finds. Fresh picks every morning.",
   openGraph: {
     type: "website",
     siteName: "Top 3 Today",
