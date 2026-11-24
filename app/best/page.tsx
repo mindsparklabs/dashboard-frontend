@@ -7,9 +7,9 @@ import { ItemThumbnail } from "@/components/item-thumbnail";
 
 export const revalidate = 3600;
 
-const title = "Best Trending Products UK – Weekly Top Picks";
+const title = "Best Trending Products This Week – Weekly Top Picks";
 const description =
-  "Each week's most consistent UK trends across beauty, tech, home & kitchen, fitness/sport, pets, AI, finance and viral picks - ranked by days in the daily top 3.";
+  "Each week's most consistent trends across beauty, tech, home & kitchen, fitness/sport, pets, AI, finance and viral picks - ranked by days in the daily top 3.";
 
 export const metadata: Metadata = {
   title: `${title} | ${SITE_NAME}`,

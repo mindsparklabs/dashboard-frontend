@@ -21,9 +21,16 @@ export const metadata: Metadata = {
   alternates: {
     types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
   },
-  title: "Top 3 Today | Trending Products UK",
+  title: "Top 3 Today | Today's Trending Products, Picked Daily",
   description:
-    "Today's top 3 trending products across beauty, tech, fitness/sport, finance, AI, home & kitchen and pets - refreshed daily, UK-focused.",
+    "The 3 products trending hardest right now in beauty, tech, home & kitchen, fitness, pets, AI, finance and viral finds. Fresh picks every morning for US & UK shoppers.",
+  openGraph: {
+    type: "website",
+    siteName: "Top 3 Today",
+    locale: "en_GB",
+    images: ["/logo-512.png"],
+  },
+  twitter: { card: "summary_large_image", site: "@Top3TodayHQ" },
 };
 
 // Site-wide Organization structured data, so search engines can link the

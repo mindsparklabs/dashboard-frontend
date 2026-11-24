@@ -31,7 +31,7 @@ export async function generateMetadata({
   if (!sector) return { title: `Not found | ${SITE_NAME}` };
 
   const title = `${weeklyTitle(sector)} – Weekly Archive`;
-  const description = `Every week's most consistent ${sector.name} trends in the UK, ranked by how many days they held a top 3 spot.`;
+  const description = `Every week's most consistent ${sector.name} trends, ranked by how many days they held a top 3 spot.`;
   return {
     title: `${title} | ${SITE_NAME}`,
     description,

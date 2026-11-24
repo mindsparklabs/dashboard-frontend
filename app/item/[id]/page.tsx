@@ -1,25 +1,49 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { getItemById } from "@/lib/daily-items";
+import { getItemById, ukDayKey } from "@/lib/daily-items";
 import { getSectorByName } from "@/lib/sectors";
 import { getItemCta } from "@/lib/item-cta";
 import { AMAZON_DISCLOSURE } from "@/lib/site";
 import { ItemThumbnail } from "@/components/item-thumbnail";
 import { TrendStat } from "@/components/trend-stat";
+import {
+  breadcrumbJsonLd,
+  jsonLdHtml,
+  longDateFromKey,
+  metaDescription,
+  sectorSeo,
+  shortDate,
+  SITE_NAME,
+} from "@/lib/seo";
 
-// Items live inside an append-only `daily items` row that can be superseded
-// at any time, so never serve a cached snapshot of this page either.
-export const revalidate = 0;
+// An item's id points at one saved row + rank, so its content never changes
+// after it is written. Cache for an hour; no request headers are read (the
+// buy button goes via /go, which geo-routes), so this stays cacheable.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
 }: PageProps<"/item/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const item = await getItemById(id);
+  const item = await getItemById(id).catch(() => null);
+  if (!item) return { title: "Item not found" };
+
+  const sector = getSectorByName(item.sector);
+  const noun = sector ? sectorSeo(sector).noun : "products";
+  const title = `${item.headline} – #${item.rank} trending ${noun}, ${shortDate(item.created_at)}`;
+  const description = metaDescription(
+    [item.description, item.why_it_matters].filter(Boolean).join(" ")
+  );
+  const path = `/item/${id}`;
+  const image = `/pin/${id}.png`;
+
   return {
-    title: item ? `${item.headline} | Top 3 Today` : "Item not found",
+    title: `${title} | ${SITE_NAME}`,
+    description,
+    alternates: { canonical: path },
+    openGraph: { type: "article", siteName: SITE_NAME, url: path, title: item.headline, description, images: [image] },
+    twitter: { card: "summary_large_image", title: item.headline, description, images: [image] },
   };
 }
 
@@ -33,16 +57,26 @@ export default async function ItemPage({
     notFound();
   }
 
-  const headersList = await headers();
-  const countryCode = headersList.get("x-vercel-ip-country");
   const sector = getSectorByName(item.sector);
   const accentColor = sector?.color ?? "#39d0ff";
   // Button choice (Amazon / source / search fallback) lives in
   // lib/item-cta.ts so this page and the sector page cards always agree.
-  const cta = getItemCta(item, sector, countryCode);
+  const cta = getItemCta(item, sector, null);
+  const dayKey = ukDayKey(item.created_at);
+  const jsonLd = breadcrumbJsonLd([
+    { name: SITE_NAME, path: "/" },
+    ...(sector
+      ? [
+          { name: sector.name, path: `/sector/${sector.slug}` },
+          { name: longDateFromKey(dayKey), path: `/sector/${sector.slug}/${dayKey}` },
+        ]
+      : []),
+    { name: item.headline, path: `/item/${item.id}` },
+  ]);
 
   return (
     <main className="ambient-bg min-h-screen w-screen px-3 py-6">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(jsonLd)} />
       <div className="max-w-[900px] mx-auto">
         <Link
           href={sector ? `/sector/${sector.slug}` : "/"}
@@ -128,6 +162,18 @@ export default async function ItemPage({
             </p>
           )}
         </div>
+
+        {sector && (
+          <p className="text-center text-sm mt-6 opacity-70" style={{ color: "#f5f5f7" }}>
+            Picked #{item.rank} on{" "}
+            <Link
+              href={`/sector/${sector.slug}/${dayKey}`}
+              className="underline hover:opacity-100"
+            >
+              {longDateFromKey(dayKey)}
+            </Link>
+          </p>
+        )}
       </div>
     </main>
   );

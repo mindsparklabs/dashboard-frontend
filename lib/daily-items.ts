@@ -92,6 +92,79 @@ export async function getLatestItemsForSector(
   return data as DailyItemsRow | null;
 }
 
+const UK_DAY = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+/** UK calendar date ("YYYY-MM-DD") of a timestamp. */
+export function ukDayKey(input: string | Date): string {
+  return UK_DAY.format(typeof input === "string" ? new Date(input) : input);
+}
+
+/**
+ * Latest row per UK day for one sector (or all sectors), newest first,
+ * covering the last `days` days. Powers the daily archive pages, their
+ * "Previous days" links and the sitemap. Read-only; no pipeline cost.
+ */
+export async function getDailyRows(
+  days: number,
+  sectorName?: string
+): Promise<DailyItemsRow[]> {
+  const since = new Date(Date.now() - (days + 1) * 86_400_000).toISOString();
+  let query = supabase
+    .from("daily items")
+    .select("id, sector, items, created_at")
+    .gte("created_at", since)
+    .order("created_at", { ascending: false })
+    .limit(1000);
+  if (sectorName) query = query.eq("sector", sectorName);
+
+  const { data, error } = await query;
+  if (error) {
+    throw new Error(`Failed to fetch daily rows: ${error.message}`);
+  }
+
+  // Descending order: the first row seen per sector+day is that day's latest.
+  const seen = new Set<string>();
+  const rows: DailyItemsRow[] = [];
+  for (const row of (data ?? []) as DailyItemsRow[]) {
+    const key = `${row.sector}|${ukDayKey(row.created_at)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    rows.push(row);
+  }
+  return rows;
+}
+
+/** One sector's final row for a UK day ("YYYY-MM-DD"), or null. */
+export async function getSectorRowForDay(
+  sectorName: string,
+  dayKey: string
+): Promise<DailyItemsRow | null> {
+  const [y, m, d] = dayKey.split("-").map(Number);
+  const start = new Date(Date.UTC(y, m - 1, d) - 86_400_000).toISOString();
+  const end = new Date(Date.UTC(y, m - 1, d) + 2 * 86_400_000).toISOString();
+
+  const { data, error } = await supabase
+    .from("daily items")
+    .select("id, sector, items, created_at")
+    .eq("sector", sectorName)
+    .gte("created_at", start)
+    .lt("created_at", end)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Failed to fetch "${sectorName}" for ${dayKey}: ${error.message}`);
+  }
+  const row = ((data ?? []) as DailyItemsRow[]).find(
+    (r) => ukDayKey(r.created_at) === dayKey
+  );
+  return row ?? null;
+}
+
 /**
  * Looks up a single item by the composite id built with buildItemId().
  * Fetches the row it lives in by primary key, then picks out the matching

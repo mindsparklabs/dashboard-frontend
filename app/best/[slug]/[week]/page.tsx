@@ -52,7 +52,7 @@ export async function generateMetadata({
   const { sector, week, weekParam, title, items } = data;
   const noun = sector.amazonEligible ? "products" : "stories";
   const description =
-    `The ${items.length} ${sector.name} ${noun} trending hardest in the UK in the week of ${formatWeekOf(week)}, ` +
+    `The ${items.length} ${sector.name} ${noun} trending hardest in the week of ${formatWeekOf(week)}, ` +
     `ranked by how many days each held a top 3 spot. Top pick: ${items[0].headline}.`;
   const path = `/best/${sector.slug}/${weekParam}`;
 

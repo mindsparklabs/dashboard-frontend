@@ -44,9 +44,12 @@ export function SiteFooter() {
         </div>
       </div>
       <p className="max-w-[900px] mx-auto">{FOOTER_DISCLOSURE}</p>
-      <nav className="mt-3 flex items-center justify-center gap-5 font-semibold">
+      <nav className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-semibold">
         <Link href="/best" className="hover:text-white transition-colors">
           Weekly best
+        </Link>
+        <Link href="/gifts" className="hover:text-white transition-colors">
+          Gift ideas
         </Link>
         <Link href="/about" className="hover:text-white transition-colors">
           About

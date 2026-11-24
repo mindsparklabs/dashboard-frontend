@@ -99,11 +99,11 @@ export function formatWeekOf(week: WeekKey): string {
   });
 }
 
-/** "Best Trending Home & Kitchen UK" / "Best Viral Trends UK". */
+/** "Best Trending Home & Kitchen" / "Best Viral Trends". */
 export function weeklyTitle(sector: Sector): string {
   return sector.slug === "viral-trending"
-    ? "Best Viral Trends UK"
-    : `Best Trending ${sector.name} UK`;
+    ? "Best Viral Trends"
+    : `Best Trending ${sector.name}`;
 }
 
 export type WeeklyItem = DailyItem & {
