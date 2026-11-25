@@ -40,6 +40,8 @@ export type ItemWithContext = DailyItem & {
   rowId: string | number;
   sector: string;
   created_at: string;
+  /** The other picks from the same day and sector (only set by getItemById), for "also trending" links. */
+  siblings?: { id: string; rank: number; headline: string }[];
 };
 
 const ITEM_ID_SEPARATOR = "_";
@@ -200,5 +202,9 @@ export async function getItemById(
     rowId: row.id,
     sector: row.sector,
     created_at: row.created_at,
+    siblings: row.items
+      .filter((entry) => entry.rank !== parsed.rank)
+      .sort((a, b) => a.rank - b.rank)
+      .map((entry) => ({ id: buildItemId(row.id, entry.rank), rank: entry.rank, headline: entry.headline })),
   };
 }

@@ -7,6 +7,7 @@ import { getItemCta } from "@/lib/item-cta";
 import { AMAZON_DISCLOSURE } from "@/lib/site";
 import { ItemThumbnail } from "@/components/item-thumbnail";
 import { TrendStat } from "@/components/trend-stat";
+import { ExploreLinks } from "@/components/explore-links";
 import {
   breadcrumbJsonLd,
   jsonLdHtml,
@@ -78,13 +79,21 @@ export default async function ItemPage({
     <main className="ambient-bg min-h-screen w-screen px-3 py-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(jsonLd)} />
       <div className="max-w-[900px] mx-auto">
-        <Link
-          href={sector ? `/sector/${sector.slug}` : "/"}
-          className="inline-block text-sm font-semibold mb-6 opacity-70 hover:opacity-100 transition-opacity"
+        <nav
+          aria-label="Breadcrumb"
+          className="text-sm font-semibold mb-6 opacity-70 flex flex-wrap gap-x-2"
           style={{ color: accentColor }}
         >
-          ← Back to {sector ? sector.name : "all sectors"}
-        </Link>
+          <Link href="/" className="hover:opacity-100">Home</Link>
+          {sector && (
+            <>
+              <span aria-hidden>/</span>
+              <Link href={`/sector/${sector.slug}`} className="hover:opacity-100">{sector.name}</Link>
+              <span aria-hidden>/</span>
+              <Link href={`/sector/${sector.slug}/${dayKey}`} className="hover:opacity-100">{longDateFromKey(dayKey)}</Link>
+            </>
+          )}
+        </nav>
 
         <div
           className="rounded-3xl backdrop-blur-xl p-6 sm:p-10 flex flex-col gap-5"
@@ -174,6 +183,25 @@ export default async function ItemPage({
             </Link>
           </p>
         )}
+
+        {item.siblings && item.siblings.length > 0 && (
+          <section className="mt-8">
+            <h2 className="text-lg font-extrabold mb-3" style={{ color: accentColor }}>
+              Also trending{sector ? ` in ${sector.name}` : ""} that day
+            </h2>
+            <ul className="flex flex-col gap-2" style={{ color: "#f5f5f7" }}>
+              {item.siblings.map((s) => (
+                <li key={s.id}>
+                  <Link href={`/item/${s.id}`} className="hover:underline">
+                    #{s.rank} {s.headline}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <ExploreLinks currentSlug={sector?.slug} />
       </div>
     </main>
   );

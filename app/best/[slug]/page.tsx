@@ -10,6 +10,7 @@ import {
   getWeekIndex,
   weeklyTitle,
 } from "@/lib/weekly";
+import { ExploreLinks } from "@/components/explore-links";
 
 // Hub listing every week for one sector. A new week appears once its first
 // daily run lands, so refresh hourly.
@@ -118,6 +119,7 @@ export default async function SectorWeeksPage({
           </ul>
         )}
       </div>
+      <ExploreLinks currentSlug={sector.slug} />
     </main>
   );
 }

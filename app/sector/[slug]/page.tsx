@@ -20,6 +20,7 @@ import {
 } from "@/lib/seo";
 import { ItemCards } from "@/components/item-cards";
 import { SectorAbout } from "@/components/sector-about";
+import { ExploreLinks } from "@/components/explore-links";
 
 // `daily items` is append-only and a new row lands each morning. A 5-minute
 // cache keeps pages fast for visitors and crawlers while still showing new
@@ -153,6 +154,8 @@ export default async function SectorPage({
         currentDay={row ? ukDayKey(row.created_at) : undefined}
         weeklyHref={null}
       />
+      {/* No sector names here: the video recorder taps this page. */}
+      <ExploreLinks showSectors={false} />
     </main>
   );
 }

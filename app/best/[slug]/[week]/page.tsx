@@ -15,6 +15,7 @@ import {
 } from "@/lib/weekly";
 import { ItemThumbnail } from "@/components/item-thumbnail";
 import { TrendStat } from "@/components/trend-stat";
+import { ExploreLinks } from "@/components/explore-links";
 
 // Weekly archive page. The current week keeps filling up as the daily
 // pipeline runs, so rebuild at most hourly; past weeks' data never changes.
@@ -273,6 +274,7 @@ export default async function WeeklyBestPage({
           {AMAZON_DISCLOSURE}
         </p>
       )}
+      <ExploreLinks currentSlug={sector.slug} />
     </main>
   );
 }

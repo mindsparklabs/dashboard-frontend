@@ -6,6 +6,7 @@ import { getRecentTopItems } from "@/lib/weekly";
 import { AMAZON_DISCLOSURE, SITE_NAME } from "@/lib/site";
 import { breadcrumbJsonLd, itemListJsonLd, jsonLdHtml, sectorSeo } from "@/lib/seo";
 import { GiftList } from "@/components/gift-list";
+import { ExploreLinks } from "@/components/explore-links";
 
 // Per-sector Christmas gift guide: up to 10 of the sector's most persistent
 // picks from the last 30 days. Shopping sectors only.
@@ -102,6 +103,7 @@ export default async function SectorGiftsPage({
         </p>
         <p className="text-center text-xs mt-8 opacity-60">{AMAZON_DISCLOSURE}</p>
       </div>
+      <ExploreLinks currentSlug={sector.slug} />
     </main>
   );
 }

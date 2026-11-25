@@ -20,6 +20,7 @@ import {
 } from "@/lib/seo";
 import { ItemCards } from "@/components/item-cards";
 import { SectorAbout } from "@/components/sector-about";
+import { ExploreLinks } from "@/components/explore-links";
 
 // Permanent daily archive: /sector/<slug>/<YYYY-MM-DD> (UK date). A past
 // day's picks never change, so these are cached for an hour. Today's date
@@ -118,6 +119,7 @@ export default async function SectorDayPage({
         currentDay={date}
         weeklyHref={`/best/${sector.slug}/${weekSlug(weekOf(row.created_at))}`}
       />
+      <ExploreLinks currentSlug={sector.slug} />
     </main>
   );
 }
